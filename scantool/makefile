@@ -1,15 +1,15 @@
 CC = gcc
 
 ifdef DEBUGMODE
-   CFLAGS = -g -Wall
+   CFLAGS = -g -Wall -Wformat=1
    AL_LIBS = -lalld
    DEFINES = -DDEBUG
 else
 ifdef RELEASE
-   CFLAGS = -Wall -O3 -fexpensive-optimizations -s
+   CFLAGS = -Wformat=1 -Wall -O3 -fexpensive-optimizations -s
    AL_LIBS = -lalleg
 else
-   CFLAGS = -O -Wall
+   CFLAGS = -O -Wall -Wformat=0
    AL_LIBS = -lalleg
 endif
 endif
