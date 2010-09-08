@@ -1,0 +1,41 @@
+This file contains any messages produced by compilers while
+running configure, to aid debugging if configure makes a mistake.
+
+configure:724: checking for gcc
+configure:837: checking whether the C compiler (gcc  ) works
+configure:853: gcc -o conftest    conftest.c  1>&5
+configure:879: checking whether the C compiler (gcc  ) is a cross-compiler
+configure:884: checking whether we are using GNU C
+configure:912: checking whether gcc accepts -g
+configure:944: checking how to run the C preprocessor
+configure:1026: checking for ranlib
+configure:1065: checking for a BSD compatible install
+configure:1118: checking whether make sets ${MAKE}
+configure:1145: checking whether ln -s works
+configure:1171: checking for ldconfig
+configure:1209: checking whether byte ordering is bigendian
+configure:1447: checking for MAP_FAILED
+configure:1504: checking for ANSI C header files
+configure:1612: checking for dirent.h that defines DIR
+configure:1650: checking for opendir in -ldir
+configure:1733: checking whether time.h and sys/time.h may both be included
+configure:1771: checking for fcntl.h
+configure:1771: checking for limits.h
+configure:1771: checking for sys/time.h
+configure:1771: checking for unistd.h
+configure:1809: checking for working const
+configure:1884: checking for inline
+configure:1924: checking for size_t
+configure:1957: checking whether struct tm is in sys/time.h or time.h
+configure:1992: checking for 8-bit clean memcmp
+configure:2031: checking for unistd.h
+configure:2070: checking for getpagesize
+configure:2123: checking for working mmap
+configure:2294: checking return type of signal handlers
+configure:2335: checking for vprintf
+configure:2387: checking for _doprnt
+configure:2442: checking for findfirst
+configure:2442: checking for memcmp
+configure:2442: checking for stricmp
+configure:2442: checking for strlwr
+configure:2442: checking for strupr

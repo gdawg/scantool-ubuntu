@@ -1,0 +1,131 @@
+<html><head><title>Queue code</title><body>
+<h1><a name="Queue code">Queue code</a></h1>
+<p>
+<ul><h4>
+<li><a href="#queue_new">queue_new</a>
+<li><a href="#queue_new_">queue_new_</a>
+<li><a href="#queue_delete">queue_delete</a>
+<li><a href="#queue_reset">queue_reset</a>
+<li><a href="#queue_put">queue_put</a>
+<li><a href="#queue_put_">queue_put_</a>
+<li><a href="#queue_peek">queue_peek</a>
+<li><a href="#queue_peek_">queue_peek_</a>
+<li><a href="#queue_get">queue_get</a>
+<li><a href="#queue_get_">queue_get_</a>
+<li><a href="#queue_empty">queue_empty</a>
+<li><a href="#queue_nearly_full">queue_nearly_full</a>
+<li><a href="#queue_full">queue_full</a>
+</h4></ul>
+<p><br><br>
+<p>
+Dzcomm comes with some FIFO queue code whcih is lso available for general use.
+<p>
+<b>fifo_queue *<a name="queue_new">queue_new</a>(unsigned int size);</b><br>
+   This function creates a queue of ints. If you need to store data values
+   of a different size use queue_new_ function instead of it. It returns
+   a pointer to a structure which serves as a handle for the queue, or
+   NULL on failure.
+<p>   
+   Example :
+<p><pre>
+     fifo_queue *q;
+     if ((q=queue_new(1024))==NULL) return(0);
+<p></pre>
+<br>
+<b>fifo_queue *<a name="queue_new_">queue_new_</a>(unsigned int size,unsigned int dsize);</b><br>
+   Create a queue of 'size' elements each of size 'dsize'. It returns a
+   pointer to a structure which serves as a handle for the queue or NULL
+   on failure.
+<p>
+   Example :
+<p><pre>
+      typedef struct {
+         int code;
+         int p1;
+         int p2;
+         } msg;
+<p>
+      //...
+<p>
+      fifo_queue *msg_q;
+      if ((msg_q=queue_new(1024,sizeof(msg)))==NULL) return(0);
+<p></pre>
+<br>
+<b>void <a name="queue_delete">queue_delete</a>(fifo_queue *q);</b><br>
+   Delete queue description and free occupied space. Don't use the
+   queue after this ...
+<p>
+<b>void <a name="queue_reset">queue_reset</a>(fifo_queue *q);</b><br>
+   Set head and tail of the queue to zero (data lost).
+<p>
+<b>int <a name="queue_put">queue_put</a>(fifo_queue *q,int c);</b><br>
+   Put value into given integer queue. On success returns
+   DZQ_NEARLY_FULL if the queue's getting a tad full,
+   DZQ_NOT_NEARLY_FULL otherwise. On failure returns
+   DZQ_FAIL_NO_Q if q was a NULL pointer or DZQ_FAIL_FULL
+   if the queue was actually full. Note that failure codes
+   are less than zero, success codes greater than or equal
+   to zero. If you need to store data of a different size
+   then use the queue_put_ function.
+<p>
+<b>int <a name="queue_put_">queue_put_</a>(fifo_queue *q,void *data)</b><br>
+   Put value into given queue. On success returns 
+   DZQ_NEARLY_FULL if the queue's getting a tad full,
+   DZQ_NOT_NEARLY_FULL otherwise. On failure returns
+   DZQ_FAIL_NO_Q if q was a NULL pointer or DZQ_FAIL_FULL
+   if the queue was actually full. Note that failure codes
+   are less than zero, success codes greater than or equal
+   to zero.
+<p>
+<b>int <a name="queue_peek">queue_peek</a>(fifo_queue *q);</b><br>
+   See the integer value at the top of an integer queue. Returns the
+   value from the top of the queue but does not remove it from the
+   queue. If the queue is not of integers then use the queue_peek_
+   function. Use queue_empty before calling queue_get to verify that
+   there is data to peek at.
+<p>
+<b>int <a name="queue_peek_">queue_peek_</a>(fifo_queue *q,void *data);</b><br>
+   See the value at the top of the queue. Returns (in the memory
+   location pointed to by data) the value from the top of the queue
+   but does not remove it from the queue. The returned integer is
+   DZQ_NEARLY_FULL if the queue's getting a tad full,
+   DZQ_NOT_NEARLY_FULL otherwise. On failure returns
+   DZQ_FAIL_NO_Q if q was a NULL pointer or DZQ_FAIL_EMPTY
+   if the queue was actually empty. Note that failure codes
+   are less than zero, success codes greater than or equal
+   to zero. It's not a bad idea to use
+   queue_empty before calling queue_peek_ to verify that there is data
+   to get.
+<p>
+<b>int <a name="queue_get">queue_get</a>(fifo_queue *q);</b><br>
+   Get integer values from an integer queue. Returns the value from
+   the top of the queue. If the queue is not of integers then use the
+   queue_get_ function. Use queue_empty before calling queue_get to
+   verify that there is data to get.
+<p>
+<b>int <a name="queue_get_">queue_get_</a>(fifo_queue *q,void *data);</b><br>
+   Get value from queue. Returns the value from the top of the queue
+   (in the memory location pointed to by data). The returned integer
+   is DZQ_NEARLY_FULL if the queue's getting a tad full,
+   DZQ_NOT_NEARLY_FULL otherwise. On failure returns
+   DZQ_FAIL_NO_Q if q was a NULL pointer or DZQ_FAIL_EMPTY
+   if the queue was actually empty. Note that failure codes
+   are less than zero, success codes greater than or equal
+   to zero. Use queue_empty before calling queue_get to verify that
+   there is data to get.
+<p>
+<b>int <a name="queue_empty">queue_empty</a>(fifo_queue *q);</b><br>
+   Test queue for emptiness. Returns DZQ_EMPTY if the queue is empty,
+   DZQ_NOT_EMPTY if the queue is not full and DZQ_FAIL_INTERNAL on
+   failure.
+<p>
+<b>int <a name="queue_nearly_full">queue_nearly_full</a>(fifo_queue *q);</b><br>
+   Test to indicate if the queue is nearly full (ie over 75% at
+   present). Returns DZQ_NEARLY_FULL if the queue is nearly full
+   and DZQ_NOT_NEARLY_FULL otherwise.
+<p>
+<b>int <a name="queue_full">queue_full</a>(fifo_queue *q);</b><br>
+   Test to indicate if the queue is full. Returns DZQ_FULL if the
+   queue is full and DZQ_NOT_FULL otherwise.
+<p>
+<p><hr><p><a href="dzcomm.html">Back to Contents</a><p>

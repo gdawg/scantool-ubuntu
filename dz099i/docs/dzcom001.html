@@ -1,0 +1,275 @@
+<html><head><title>Port configuration</title><body>
+<h1><a name="Port configuration">Port configuration</a></h1>
+<p>
+<ul><h4>
+<li><a href="#dzcomm_init">dzcomm_init</a>
+<li><a href="#dzcomm_closedown">dzcomm_closedown</a>
+<li><a href="#comm_port_init">comm_port_init</a>
+<li><a href="#comm_port_load_settings">comm_port_load_settings</a>
+<li><a href="#comm_port_set_irq_num">comm_port_set_irq_num</a>
+<li><a href="#comm_port_set_name">comm_port_set_name</a>
+<li><a href="#comm_port_set_port_address">comm_port_set_port_address</a>
+<li><a href="#comm_port_set_baud_rate">comm_port_set_baud_rate</a>
+<li><a href="#comm_port_set_data_bits">comm_port_set_data_bits</a>
+<li><a href="#comm_port_set_stop_bits">comm_port_set_stop_bits</a>
+<li><a href="#comm_port_set_parity">comm_port_set_parity</a>
+<li><a href="#comm_port_set_flow_control">comm_port_set_flow_control</a>
+<li><a href="#comm_port_set_lsr_handler">comm_port_set_lsr_handler</a>
+<li><a href="#comm_port_set_msr_handler">comm_port_set_msr_handler</a>
+<li><a href="#comm_port_get_irq_num">comm_port_get_irq_num</a>
+<li><a href="#comm_port_get_name">comm_port_get_name</a>
+<li><a href="#comm_port_get_port_address">comm_port_get_port_address</a>
+<li><a href="#comm_port_get_baud_rate">comm_port_get_baud_rate</a>
+<li><a href="#comm_port_get_data_bits">comm_port_get_data_bits</a>
+<li><a href="#comm_port_get_stop_bits">comm_port_get_stop_bits</a>
+<li><a href="#comm_port_get_parity">comm_port_get_parity</a>
+<li><a href="#comm_port_get_flow_control">comm_port_get_flow_control</a>
+<li><a href="#comm_port_get_lsr_handler">comm_port_get_lsr_handler</a>
+<li><a href="#comm_port_get_msr_handler">comm_port_get_msr_handler</a>
+</h4></ul>
+<p><br><br>
+<p>
+To use dzcomm it is necessary to initialise the library and then to configure
+the ports. Each serial line is considered as an indepnedent input/output port
+and has certain characteristics associated with it. All the routines which talk
+to, read from or somehow control an serial line will take, as one of their
+arguemnts, a pointer to the structure which defines that port:
+<p><pre>
+      comm_port *port.
+<p></pre>
+This structure contains a complete desription of how the port is configured.
+However, it is not necessary (or advisable) to alter the contents of this
+structure directly. A collection of routines are provided which enable the
+port to be configured and used without having to mess around with the guts
+of this structure.
+<p>
+The following sequence should be used:
+<p><pre>
+      comm_port *my_port;
+<p>
+      dzcomm_init();                      // initialise the library
+      my_port = comm_port_init(_comN);    // create the port
+      comm_port_set_*(my_port, *);        // define it
+      comm_port_install_handler(my_port)  // run the port as per this definition
+<p>
+      // And then read and write from and to the port.
+<p></pre>
+<br>
+<b>int <a name="dzcomm_init">dzcomm_init</a>();</b><br>
+   Initialises the dzcomm library. A necessary call before using any of the
+   other functions. Having done this you will want to initialise one or more
+   ports and then use them. The function returns 1 if dzcomm is successfully
+   installed, 0 otherwise.
+<p>
+<b>void <a name="dzcomm_closedown">dzcomm_closedown</a>();</b><br>
+   Does the opposite to dzcomm_init. Closedown the dzcomm serial API and
+   releases system resources as much as it can. Is automatically called
+   on program exit (assuming that dzcomm_init has been called) and will
+   will uninstall and delete any ports which require it. It is therefore
+   not necessary to uninstall or delete ports explicity in code which uses
+   the dzcomm library (0.9.4 and above).
+<p>
+<b>comm_port *<a name="comm_port_init">comm_port_init</a>(comm n);</b><br>
+   Creates a handle (which is a pointer to a structre) for a new port.
+   The argument, defined below, simply gives comm_port_init a hint as
+   to which potentially built-in port the port should define. If the
+   port you are using bears no relation to a standard PC built in port
+   just send an arbitrary argument and then use the comm_port_set_*
+   routines to describe the port. Even if if you are using a standard
+   port you will want to use the comm_port_set_* routines to complete
+   the configuration of the port.
+<p>
+   The argument must be one of the following. Please use these values
+   rather than infering what the enum values might be.
+<p><pre>
+      typedef enum {_com1, _com2, _com3, _com4, _com5, _com6, _com7, _com8} comm;
+<p></pre>
+<br>
+<b>int <a name="comm_port_load_settings">comm_port_load_settings</a>(comm_port *port, char *file_name)</b><br>
+   Load the setting for a comm port from a file. Traditionally these files
+   have had a ".ini" extension but that is not required. Return values are
+   1 for success and 0 for failure.
+<p>
+   Format of the file:
+<p><pre>
+      baud=<baud value>; //<baud value>={110,150,300,600,1200,2400,...,115200}
+      Example : baud=9600;
+<p>
+      data=<data lehgth>; //<data length>={5,6,7,8}
+      Example : data=7;
+<p>
+      parity=<parity bits>; //<parity bits>={Even,Odd,No(None)}
+      Example : parity=Even;
+<p>
+      stop=<stop bits>; //<stop bits>={1,2}
+      Example : stop=1;
+<p>
+      irq=<irq number>;
+      Example : irq=5;
+<p>
+      address=<port address>; // port address in hex.
+      Example : address=0x2f8; // Note : use 0x prefix always.
+<p>
+      control=<control type>;
+      //<control type>={xon_xoff(xon/xoff),rts_cts(rts/cts),no(none)}
+      Example : control=xon_xoff;
+<p>
+      name=<port name>; // just name of port. Not used by any lib function.
+      Example : name=Modem Courier V.EVERYTHING;
+<p></pre>
+<br>
+<b>void <a name="comm_port_set_irq_num">comm_port_set_irq_num</a>(comm_port *port, unsigned char irq_num);</b><br>
+   Set the IRQ number for the port. irq_num should be the IRQ line the port is
+   set to use, between 0 and 15 inclusive. The value set will only come into effect
+   when a port is reinstalled.
+<p>
+<b>void <a name="comm_port_set_name">comm_port_set_name</a>(comm_port *port, char *name);</b><br>
+   Set the name that is associated with the port. name should be a pointer to
+   a 0 terminated string which will be copied into an internal string. The
+   maximum allowed length of the string is DZCOMM_PORT_NAME_MAX_LENGTH, which
+   is defined in dzcomm.h. This name is irrelevant to the actual running of the
+   port and this _set_ call will take effect immediately.
+<p>
+<b>void <a name="comm_port_set_port_address">comm_port_set_port_address</a>(comm_port *port, unsigned short int port_address);</b><br>
+   Set the address of the port. The value set will only come into effect
+   when a port is reinstalled.
+<p>
+<b>void <a name="comm_port_set_baud_rate">comm_port_set_baud_rate</a>(comm_port *port, baud_bits baud_rate);</b><br>
+   Set the baud rate the port should use. The value set will only come into effect
+   when a port is reinstalled.
+<p>
+   The argument must be one of the following. Please use these values
+   rather than infering what the enum values might be.
+<p><pre>
+      typedef enum {_110,   _150,   _300,   _600,   _1200,  _2400,  _4800,
+                    _9600,  _19200, _38400, _57600, _115200} baud_bits;
+<p></pre>
+<br>
+<br>
+<b>void <a name="comm_port_set_data_bits">comm_port_set_data_bits</a>(comm_port *port, data_bits num_data_bits);</b><br>
+   Set the number of data bits the port should use. The value set will only
+   come into effect when a port is reinstalled.
+<p>
+   The argument must be one of the following. Please use these values
+   rather than infering what the enum values might be.
+<p><pre>
+      typedef enum {BITS_5, BITS_6, BITS_7, BITS_8} data_bits;
+<p></pre>
+<br>
+<b>void <a name="comm_port_set_stop_bits">comm_port_set_stop_bits</a>(comm_port *port, data_bits num_stop_bits);</b><br>
+   Set the number of stop bits the port should use. The value set will only
+   come into effect when a port is reinstalled.
+<p>
+   The argument must be one of the following. Please use these values
+   rather than infering what the enum values might be.
+<p><pre>
+      typedef enum {STOP_1, STOP_2} stop_bits;
+<p></pre>
+<br>
+<b>void <a name="comm_port_set_parity">comm_port_set_parity</a>(comm_port *port, parity_bits irq_num);</b><br>
+   Set the parity method for the port. The value set will only
+   come into effect when a port is reinstalled.
+<p>
+   The argument must be one of the following. Please use these values
+   rather than infering what the enum values might be.
+<p><pre>
+      typedef enum {NO_PARITY, ODD_PARITY, EVEN_PARITY, MARK_PARITY, SPACE_PARITY} parity_bits;
+<p></pre>
+<br>
+<b>void <a name="comm_port_set_flow_control">comm_port_set_flow_control</a>(comm_port *port, flow_control_type flow_option);</b><br>
+   Set the flow control method the port should employ. The value set will only
+   come into effect when a port is reinstalled.
+<p>
+   The argument must be one of the following. Please use these values
+   rather than infering what the enum values might be.
+<p><pre>
+      typedef enum {NO_CONTROL, XON_XOFF, RTS_CTS} flow_control_type;
+<p></pre>
+<br>
+<b>void <a name="comm_port_set_lsr_handler">comm_port_set_lsr_handler</a>(comm_port *port, dz_ll_handler lsr_handler);</b><br>
+   HANDLE WITH CARE. This sets a routine which will be called when the
+   UART returns an LSR condition. The code mnust be locked in memory if
+   your system requires it. The lsr_handler argument is the function
+   which will be called when the condition arises:
+<p><pre>
+      int lsr_hander(comm_port *port, int lsr_contents)
+<p></pre>
+   It take two arguments: the port on which the condition arose and the
+   contents of the LSR register. You should not reread the LSR in the
+   handler as the read which was used to pass the contents to this
+   function will have reset it.
+<p>
+   dz_ll_handler is simply a shorthand for a pointer to the above type of
+   function.
+<p>
+   This call takes effect immediately.
+<p>   
+<b>void <a name="comm_port_set_msr_handler">comm_port_set_msr_handler</a>(comm_port *port, int (*msr_handler)(comm_port *port, int msr_contents));</b><br>
+   HANDLE WITH CARE. This sets a routine which will be called when the
+   UART returns an MSR condition. The code mnust be locked in memory if
+   your system requires it. the msr_handler argument is the function
+   which will be called when the condition arises:
+<p><pre>
+      int msr_hander(comm_port *port, int msr_contents)
+<p></pre>
+   It take two arguments: the port on which the condition arose and the
+   contents of the MSR register. You should not reread the MSR in the
+   handler as the read which was used to pass the contents to this
+   function will have reset it.
+<p>
+   dz_ll_handler is simply a shorthand for a pointer to the above type of
+   function.
+<p>
+   This call takes effect immediately.
+<p>
+<b>unsigned char <a name="comm_port_get_irq_num">comm_port_get_irq_num</a>(comm_port *port);</b><br>
+   Returns the IRQ number for the port. Returns the most recent value set by the
+   _set_ routine, which may not have been into action yet.
+<p>
+<b>char *<a name="comm_port_get_name">comm_port_get_name</a>(comm_port *port, char *name, int max_chars);</b><br>
+   Returns the name that is associated with the port. name should be a pointer to
+   a block of memory which can hold up to max_chars characters in which the name
+   will be stored. Note that the maximum length of a port name is
+   DZCOMM_PORT_NAME_MAX_LENGTH.
+<p>
+<b>unsigned short int <a name="comm_port_get_port_address">comm_port_get_port_address</a>(comm_port *port);</b><br>
+   Returns the address of the port. Returns the most recent value set by the
+   _set_ routine, which may not have been into action yet.
+<p>
+<b>baud_bits <a name="comm_port_get_baud_rate">comm_port_get_baud_rate</a>(comm_port *port);</b><br>
+   Returns the baud rate the port should use. Returns the most recent value set by the
+   _set_ routine, which may not have been into action yet.
+<p>
+<b>data_bits <a name="comm_port_get_data_bits">comm_port_get_data_bits</a>(comm_port *port);</b><br>
+   Returns the number of data bits the port should use. Returns the most recent value set by the
+   _set_ routine, which may not have been into action yet.
+<p>
+<b>data_bits <a name="comm_port_get_stop_bits">comm_port_get_stop_bits</a>(comm_port *port);</b><br>
+   Returns the number of stop bits the port should use. Returns the most recent value set by the
+   _set_ routine, which may not have been into action yet.
+<p>
+<b>parity_bits <a name="comm_port_get_parity">comm_port_get_parity</a>(comm_port *port);</b><br>
+   Returns the flow control method for the port. Returns the most recent value set by the
+   _set_ routine, which may not have been into action yet.
+<p>
+<b>flow_control_type <a name="comm_port_get_flow_control">comm_port_get_flow_control</a>(comm_port *port);</b><br>
+   Returns the flow control method used by the port.
+<p>
+<b>dz_ll_handler <a name="comm_port_get_lsr_handler">comm_port_get_lsr_handler</a>(comm_port *port);</b><br>
+   Return the user's lsr handler, if any. It returns a pointer to a function
+   of type:
+<p><pre>
+      int lsr_hander(comm_port *port, int lsr_contents)
+<p></pre>
+   or NULL if no function has been set.
+<p>
+<b>dz_ll_handler <a name="comm_port_get_msr_handler">comm_port_get_msr_handler</a>(comm_port *port);</b><br>
+   Return the user's lsr handler, if any. It returns a pointer to a function
+   of type:
+<p><pre>
+      int msr_hander(comm_port *port, int msr_contents)
+<p></pre>
+   or NULL if no function has been set.
+<p>
+<br>
+<p><hr><p><a href="dzcomm.html">Back to Contents</a><p>

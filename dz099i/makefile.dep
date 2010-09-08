@@ -1,0 +1,214 @@
+# Automatically generated.
+LIBDZCOM_OBJECTS = \
+  $(OBJDIR)/dzcom/comm$(OBJ) \
+  $(OBJDIR)/dzcom/queue$(OBJ) \
+  $(OBJDIR)/dzcom/inline$(OBJ) \
+  $(OBJDIR)/dzcom/ucomm$(OBJ) \
+  $(OBJDIR)/dzcom/lcomm$(OBJ)
+LIBDZCOM_SHARED_OBJECTS = \
+  $(OBJDIR)/shared/dzcom/comm$(OBJ) \
+  $(OBJDIR)/shared/dzcom/queue$(OBJ) \
+  $(OBJDIR)/shared/dzcom/inline$(OBJ) \
+  $(OBJDIR)/shared/dzcom/ucomm$(OBJ) \
+  $(OBJDIR)/shared/dzcom/lcomm$(OBJ)
+LIBDZCOM_UNSHARED_OBJECTS =
+
+$(LIBDIR)/libdzcom.a: $(LIBDZCOM_OBJECTS)
+	rm -f $(LIBDIR)/libdzcom.a
+	$(AR) rvs $(LIBDIR)/libdzcom.a $(LIBDZCOM_OBJECTS)
+
+$(LIBDIR)/libdzcom-$(shared_version).so: $(LIBDZCOM_SHARED_OBJECTS)
+	rm -f $(LIBDIR)/libdzcom-$(shared_version).so
+	gcc -shared -Wl,-soname,libdzcom.so.$(shared_major) -o $(LIBDIR)/libdzcom-$(shared_version).so $(LIBDZCOM_SHARED_OBJECTS)
+
+$(LIBDIR)/libdzcom.so.$(shared_major): $(LIBDIR)/libdzcom-$(shared_version).so
+	cd $(LIBDIR) ; ln -sf libdzcom-$(shared_version).so libdzcom.so.$(shared_major)
+
+$(LIBDIR)/libdzcom.so: $(LIBDIR)/libdzcom.so.$(shared_major)
+	$(mksofile) $(LIBDIR) libdzcom.so libdzcom.so.$(shared_major) libdzcom_nonshared.a
+
+$(LIBDIR)/libdzcom_nonshared.a: $(LIBDZCOM_UNSHARED_OBJECTS)
+	rm -f libdzcom_nonshared.a
+	$(AR) rvs $(LIBDIR)/libdzcom_nonshared.a $(LIBDZCOM_UNSHARED_OBJECTS)
+
+
+LIBDZCD_OBJECTS = \
+  $(OBJDIR)/dzcd/comm$(OBJ) \
+  $(OBJDIR)/dzcd/queue$(OBJ) \
+  $(OBJDIR)/dzcd/inline$(OBJ) \
+  $(OBJDIR)/dzcd/ucomm$(OBJ) \
+  $(OBJDIR)/dzcd/lcomm$(OBJ)
+LIBDZCD_SHARED_OBJECTS = \
+  $(OBJDIR)/shared/dzcd/comm$(OBJ) \
+  $(OBJDIR)/shared/dzcd/queue$(OBJ) \
+  $(OBJDIR)/shared/dzcd/inline$(OBJ) \
+  $(OBJDIR)/shared/dzcd/ucomm$(OBJ) \
+  $(OBJDIR)/shared/dzcd/lcomm$(OBJ)
+LIBDZCD_UNSHARED_OBJECTS =
+
+$(LIBDIR)/libdzcd.a: $(LIBDZCD_OBJECTS)
+	rm -f $(LIBDIR)/libdzcd.a
+	$(AR) rvs $(LIBDIR)/libdzcd.a $(LIBDZCD_OBJECTS)
+
+$(LIBDIR)/libdzcd-$(shared_version).so: $(LIBDZCD_SHARED_OBJECTS)
+	rm -f $(LIBDIR)/libdzcd-$(shared_version).so
+	gcc -shared -Wl,-soname,libdzcd.so.$(shared_major) -o $(LIBDIR)/libdzcd-$(shared_version).so $(LIBDZCD_SHARED_OBJECTS)
+
+$(LIBDIR)/libdzcd.so.$(shared_major): $(LIBDIR)/libdzcd-$(shared_version).so
+	cd $(LIBDIR) ; ln -sf libdzcd-$(shared_version).so libdzcd.so.$(shared_major)
+
+$(LIBDIR)/libdzcd.so: $(LIBDIR)/libdzcd.so.$(shared_major)
+	$(mksofile) $(LIBDIR) libdzcd.so libdzcd.so.$(shared_major) libdzcd_nonshared.a
+
+$(LIBDIR)/libdzcd_nonshared.a: $(LIBDZCD_UNSHARED_OBJECTS)
+	rm -f libdzcd_nonshared.a
+	$(AR) rvs $(LIBDIR)/libdzcd_nonshared.a $(LIBDZCD_UNSHARED_OBJECTS)
+
+
+LIBDZCP_OBJECTS = \
+  $(OBJDIR)/dzcp/comm$(OBJ) \
+  $(OBJDIR)/dzcp/queue$(OBJ) \
+  $(OBJDIR)/dzcp/inline$(OBJ) \
+  $(OBJDIR)/dzcp/ucomm$(OBJ) \
+  $(OBJDIR)/dzcp/lcomm$(OBJ)
+LIBDZCP_SHARED_OBJECTS = \
+  $(OBJDIR)/shared/dzcp/comm$(OBJ) \
+  $(OBJDIR)/shared/dzcp/queue$(OBJ) \
+  $(OBJDIR)/shared/dzcp/inline$(OBJ) \
+  $(OBJDIR)/shared/dzcp/ucomm$(OBJ) \
+  $(OBJDIR)/shared/dzcp/lcomm$(OBJ)
+LIBDZCP_UNSHARED_OBJECTS =
+
+$(LIBDIR)/libdzcp.a: $(LIBDZCP_OBJECTS)
+	rm -f $(LIBDIR)/libdzcp.a
+	$(AR) rvs $(LIBDIR)/libdzcp.a $(LIBDZCP_OBJECTS)
+
+$(LIBDIR)/libdzcp-$(shared_version).so: $(LIBDZCP_SHARED_OBJECTS)
+	rm -f $(LIBDIR)/libdzcp-$(shared_version).so
+	gcc -shared -Wl,-soname,libdzcp.so.$(shared_major) -o $(LIBDIR)/libdzcp-$(shared_version).so $(LIBDZCP_SHARED_OBJECTS)
+
+$(LIBDIR)/libdzcp.so.$(shared_major): $(LIBDIR)/libdzcp-$(shared_version).so
+	cd $(LIBDIR) ; ln -sf libdzcp-$(shared_version).so libdzcp.so.$(shared_major)
+
+$(LIBDIR)/libdzcp.so: $(LIBDIR)/libdzcp.so.$(shared_major)
+	$(mksofile) $(LIBDIR) libdzcp.so libdzcp.so.$(shared_major) libdzcp_nonshared.a
+
+$(LIBDIR)/libdzcp_nonshared.a: $(LIBDZCP_UNSHARED_OBJECTS)
+	rm -f libdzcp_nonshared.a
+	$(AR) rvs $(LIBDIR)/libdzcp_nonshared.a $(LIBDZCP_UNSHARED_OBJECTS)
+
+
+$(OBJDIR)/dzcom/comm$(OBJ): $(srcdir)/src/comm.c $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_NORMAL) -c $(srcdir)/src/comm.c -o $(OBJDIR)/dzcom/comm$(OBJ)
+$(OBJDIR)/shared/dzcom/comm$(OBJ): $(srcdir)/src/comm.c $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_NORMAL) $(DZCOMM_SHAREDLIB_CFLAGS) -c $(srcdir)/src/comm.c -o $(OBJDIR)/shared/dzcom/comm$(OBJ)
+
+$(OBJDIR)/dzcd/comm$(OBJ): $(srcdir)/src/comm.c $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_DEBUG) -c $(srcdir)/src/comm.c -o $(OBJDIR)/dzcd/comm$(OBJ)
+$(OBJDIR)/shared/dzcd/comm$(OBJ): $(srcdir)/src/comm.c $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_DEBUG) $(DZCOMM_SHAREDLIB_CFLAGS) -c $(srcdir)/src/comm.c -o $(OBJDIR)/shared/dzcd/comm$(OBJ)
+
+$(OBJDIR)/dzcp/comm$(OBJ): $(srcdir)/src/comm.c $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_PROFILE) -c $(srcdir)/src/comm.c -o $(OBJDIR)/dzcp/comm$(OBJ)
+$(OBJDIR)/shared/dzcp/comm$(OBJ): $(srcdir)/src/comm.c $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_PROFILE) $(DZCOMM_SHAREDLIB_CFLAGS) -c $(srcdir)/src/comm.c -o $(OBJDIR)/shared/dzcp/comm$(OBJ)
+
+$(OBJDIR)/dzcom/queue$(OBJ): $(srcdir)/src/queue.c $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_NORMAL) -c $(srcdir)/src/queue.c -o $(OBJDIR)/dzcom/queue$(OBJ)
+$(OBJDIR)/shared/dzcom/queue$(OBJ): $(srcdir)/src/queue.c $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_NORMAL) $(DZCOMM_SHAREDLIB_CFLAGS) -c $(srcdir)/src/queue.c -o $(OBJDIR)/shared/dzcom/queue$(OBJ)
+
+$(OBJDIR)/dzcd/queue$(OBJ): $(srcdir)/src/queue.c $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_DEBUG) -c $(srcdir)/src/queue.c -o $(OBJDIR)/dzcd/queue$(OBJ)
+$(OBJDIR)/shared/dzcd/queue$(OBJ): $(srcdir)/src/queue.c $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_DEBUG) $(DZCOMM_SHAREDLIB_CFLAGS) -c $(srcdir)/src/queue.c -o $(OBJDIR)/shared/dzcd/queue$(OBJ)
+
+$(OBJDIR)/dzcp/queue$(OBJ): $(srcdir)/src/queue.c $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_PROFILE) -c $(srcdir)/src/queue.c -o $(OBJDIR)/dzcp/queue$(OBJ)
+$(OBJDIR)/shared/dzcp/queue$(OBJ): $(srcdir)/src/queue.c $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_PROFILE) $(DZCOMM_SHAREDLIB_CFLAGS) -c $(srcdir)/src/queue.c -o $(OBJDIR)/shared/dzcp/queue$(OBJ)
+
+$(OBJDIR)/dzcom/inline$(OBJ): $(srcdir)/src/inline.c $(DZCOMM_INTERNAL_HEADER) $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_NORMAL) -c $(srcdir)/src/inline.c -o $(OBJDIR)/dzcom/inline$(OBJ)
+$(OBJDIR)/shared/dzcom/inline$(OBJ): $(srcdir)/src/inline.c $(DZCOMM_INTERNAL_HEADER) $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_NORMAL) $(DZCOMM_SHAREDLIB_CFLAGS) -c $(srcdir)/src/inline.c -o $(OBJDIR)/shared/dzcom/inline$(OBJ)
+
+$(OBJDIR)/dzcd/inline$(OBJ): $(srcdir)/src/inline.c $(DZCOMM_INTERNAL_HEADER) $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_DEBUG) -c $(srcdir)/src/inline.c -o $(OBJDIR)/dzcd/inline$(OBJ)
+$(OBJDIR)/shared/dzcd/inline$(OBJ): $(srcdir)/src/inline.c $(DZCOMM_INTERNAL_HEADER) $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_DEBUG) $(DZCOMM_SHAREDLIB_CFLAGS) -c $(srcdir)/src/inline.c -o $(OBJDIR)/shared/dzcd/inline$(OBJ)
+
+$(OBJDIR)/dzcp/inline$(OBJ): $(srcdir)/src/inline.c $(DZCOMM_INTERNAL_HEADER) $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_PROFILE) -c $(srcdir)/src/inline.c -o $(OBJDIR)/dzcp/inline$(OBJ)
+$(OBJDIR)/shared/dzcp/inline$(OBJ): $(srcdir)/src/inline.c $(DZCOMM_INTERNAL_HEADER) $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_PROFILE) $(DZCOMM_SHAREDLIB_CFLAGS) -c $(srcdir)/src/inline.c -o $(OBJDIR)/shared/dzcp/inline$(OBJ)
+
+$(OBJDIR)/dzcom/ucomm$(OBJ): $(srcdir)/src/unix/ucomm.c $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_NORMAL) -c $(srcdir)/src/unix/ucomm.c -o $(OBJDIR)/dzcom/ucomm$(OBJ)
+$(OBJDIR)/shared/dzcom/ucomm$(OBJ): $(srcdir)/src/unix/ucomm.c $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_NORMAL) $(DZCOMM_SHAREDLIB_CFLAGS) -c $(srcdir)/src/unix/ucomm.c -o $(OBJDIR)/shared/dzcom/ucomm$(OBJ)
+
+$(OBJDIR)/dzcd/ucomm$(OBJ): $(srcdir)/src/unix/ucomm.c $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_DEBUG) -c $(srcdir)/src/unix/ucomm.c -o $(OBJDIR)/dzcd/ucomm$(OBJ)
+$(OBJDIR)/shared/dzcd/ucomm$(OBJ): $(srcdir)/src/unix/ucomm.c $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_DEBUG) $(DZCOMM_SHAREDLIB_CFLAGS) -c $(srcdir)/src/unix/ucomm.c -o $(OBJDIR)/shared/dzcd/ucomm$(OBJ)
+
+$(OBJDIR)/dzcp/ucomm$(OBJ): $(srcdir)/src/unix/ucomm.c $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_PROFILE) -c $(srcdir)/src/unix/ucomm.c -o $(OBJDIR)/dzcp/ucomm$(OBJ)
+$(OBJDIR)/shared/dzcp/ucomm$(OBJ): $(srcdir)/src/unix/ucomm.c $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_PROFILE) $(DZCOMM_SHAREDLIB_CFLAGS) -c $(srcdir)/src/unix/ucomm.c -o $(OBJDIR)/shared/dzcp/ucomm$(OBJ)
+
+$(OBJDIR)/dzcom/lcomm$(OBJ): $(srcdir)/src/linux/lcomm.c $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_NORMAL) -c $(srcdir)/src/linux/lcomm.c -o $(OBJDIR)/dzcom/lcomm$(OBJ)
+$(OBJDIR)/shared/dzcom/lcomm$(OBJ): $(srcdir)/src/linux/lcomm.c $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_NORMAL) $(DZCOMM_SHAREDLIB_CFLAGS) -c $(srcdir)/src/linux/lcomm.c -o $(OBJDIR)/shared/dzcom/lcomm$(OBJ)
+
+$(OBJDIR)/dzcd/lcomm$(OBJ): $(srcdir)/src/linux/lcomm.c $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_DEBUG) -c $(srcdir)/src/linux/lcomm.c -o $(OBJDIR)/dzcd/lcomm$(OBJ)
+$(OBJDIR)/shared/dzcd/lcomm$(OBJ): $(srcdir)/src/linux/lcomm.c $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_DEBUG) $(DZCOMM_SHAREDLIB_CFLAGS) -c $(srcdir)/src/linux/lcomm.c -o $(OBJDIR)/shared/dzcd/lcomm$(OBJ)
+
+$(OBJDIR)/dzcp/lcomm$(OBJ): $(srcdir)/src/linux/lcomm.c $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_PROFILE) -c $(srcdir)/src/linux/lcomm.c -o $(OBJDIR)/dzcp/lcomm$(OBJ)
+$(OBJDIR)/shared/dzcp/lcomm$(OBJ): $(srcdir)/src/linux/lcomm.c $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_PROFILE) $(DZCOMM_SHAREDLIB_CFLAGS) -c $(srcdir)/src/linux/lcomm.c -o $(OBJDIR)/shared/dzcp/lcomm$(OBJ)
+
+# Headers referred by symbols:
+# dzcomm_h dzcomm_dzintern_h DZCOMM_INTERNAL_HEADER
+
+tests/rs232$(EXE): $(OBJDIR)/rs232$(OBJ) $(LIBDZCOM)
+	$(LINK) -o tests/rs232$(EXE) $(OBJDIR)/rs232$(OBJ) $(LINK_LIBDZCOM) $(LIBS)
+
+$(OBJDIR)/rs232$(OBJ): $(srcdir)/tests/rs232.c
+	$(COMPILE_PROGRAM) -c $(srcdir)/tests/rs232.c -o $(OBJDIR)/rs232$(OBJ)
+
+examples/exqueue$(EXE): $(OBJDIR)/exqueue$(OBJ) $(LIBDZCOM)
+	$(LINK) -o examples/exqueue$(EXE) $(OBJDIR)/exqueue$(OBJ) $(LINK_LIBDZCOM) $(LIBS)
+
+$(OBJDIR)/exqueue$(OBJ): $(srcdir)/examples/exqueue.c $(dzcomm_h)
+	$(COMPILE_PROGRAM) -c $(srcdir)/examples/exqueue.c -o $(OBJDIR)/exqueue$(OBJ)
+
+examples/exterm$(EXE): $(OBJDIR)/exterm$(OBJ) $(LIBDZCOM)
+	$(LINK) -o examples/exterm$(EXE) $(OBJDIR)/exterm$(OBJ) $(LINK_LIBDZCOM) $(LIBS)
+
+$(OBJDIR)/exterm$(OBJ): $(srcdir)/examples/exterm.c
+	$(COMPILE_PROGRAM) -c $(srcdir)/examples/exterm.c -o $(OBJDIR)/exterm$(OBJ)
+
+# Headers referred by symbols:
+# dzcomm_h
+
+docs/makedoc$(EXE): $(OBJDIR)/makedoc$(OBJ)
+	$(LINK) -o docs/makedoc$(EXE) $(OBJDIR)/makedoc$(OBJ)
+
+$(OBJDIR)/makedoc$(OBJ): $(srcdir)/docs/makedoc.c
+	$(COMPILE_PROGRAM) -c $(srcdir)/docs/makedoc.c -o $(OBJDIR)/makedoc$(OBJ)
+
+src/i386/asmdef$(EXE): $(OBJDIR)/asmdef$(OBJ)
+	$(LINK) -o src/i386/asmdef$(EXE) $(OBJDIR)/asmdef$(OBJ)
+
+$(OBJDIR)/asmdef$(OBJ): $(srcdir)/src/i386/asmdef.c $(dzcomm_h) $(dzcomm_dzintern_h)
+	$(COMPILE_PROGRAM) -c $(srcdir)/src/i386/asmdef.c -o $(OBJDIR)/asmdef$(OBJ)
+
+# Headers referred by symbols:
+# dzcomm_h dzcomm_dzintern_h
+

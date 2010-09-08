@@ -1,0 +1,42 @@
+<html><head><title>General points</title><body>
+<h1><a name="General points">General points</a></h1>
+<p>
+<ul><h4>
+</h4></ul>
+<p><br><br>
+<p>
+See readme.txt for a general introduction, copyright details, and 
+information about how to install dzcomm and link your program with it.
+<p>
+Dzcomm is a result of the magnificent Allegro library. It has provided the
+inspiration and in many cases the code which has simplfied the process of
+developping what I hope will become a multi-platform serial line API.
+<p>
+Hopefully, Dzcomm has now evolved to the point where it can work alongside
+allegro but no longer relies on it. It should have alternative routines
+for everything it previosuly relied on allegro to do and should decide
+when you compile it in whether to use allegros routines or its own.
+<p>
+To use dzcomm in your code you will need to put
+<p><pre>
+      #include &lt;dzcomm.h&gt;
+<p></pre>
+in your code. Obviously (I hope) this will only work after you've installed
+the library. If you wish to use allegro alongside dzcomm you will need to
+include the allegro library. If you do so it is IMPERATIVE that you include
+allegro first (this how dzcomm knows where to link to):
+<p><pre>
+      #include &lt;allegro.h&gt;
+      #include &lt;dzcomm.h&gt;
+<p></pre>
+<br>
+If you have more than one C file in a project and you wish to access dzcomm
+from more than one of those files, you must put the following #define before
+all but one of the dzcomm includes:
+<p><pre>
+      #define DZCOMM_SECONDARY_INCLUDE
+      #include &lt;dzcomm.h&gt;
+<p></pre>
+However, do remember to inlcude it once without the #define!
+<p>
+<p><hr><p><a href="dzcomm.html">Back to Contents</a><p>

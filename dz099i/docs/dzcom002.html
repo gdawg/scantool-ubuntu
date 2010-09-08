@@ -1,0 +1,145 @@
+<html><head><title>Data flow</title><body>
+<h1><a name="Data flow">Data flow</a></h1>
+<p>
+<ul><h4>
+<li><a href="#comm_port_install_handler">comm_port_install_handler</a>
+<li><a href="#comm_port_reinsatall">comm_port_reinsatall</a>
+<li><a href="#comm_port_uninstall">comm_port_uninstall</a>
+<li><a href="#comm_port_flush_output">comm_port_flush_output</a>
+<li><a href="#comm_port_flush_input">comm_port_flush_input</a>
+<li><a href="#comm_port_delete">comm_port_delete</a>
+<li><a href="#comm_port_out">comm_port_out</a>
+<li><a href="#comm_port_out_empty">comm_port_out_empty</a>
+<li><a href="#comm_port_out_full">comm_port_out_full</a>
+<li><a href="#comm_port_string_send">comm_port_string_send</a>
+<li><a href="#comm_port_command_send">comm_port_command_send</a>
+<li><a href="#comm_port_in_empty">comm_port_in_empty</a>
+<li><a href="#comm_port_in_full">comm_port_in_full</a>
+<li><a href="#comm_port_test">comm_port_test</a>
+<li><a href="#comm_port_send_break">comm_port_send_break</a>
+<li><a href="#comm_port_give_line_status">comm_port_give_line_status</a>
+<li><a href="#comm_port_set_line_status">comm_port_set_line_status</a>
+<li><a href="#modem_hangup">modem_hangup</a>
+</h4></ul>
+<p><br><br>
+<p>
+Having set up your ports you will want to use them! To do this you must
+install the handler. Having donw this ou can then read from and write
+to the ports.
+<p>
+<b>int <a name="comm_port_install_handler">comm_port_install_handler</a>(comm_port *port);</b><br>
+   Once the port has been configured, whether from a file or by using the
+   comm_port_set_* routines, this function must be called to ensure that
+   the port is running with the desired confiuration. It should only be
+   called once per port, configuration changes should be enfored using
+   comm_port_reinstall. Until this function is called the port cannot be
+   written to or read from.
+<p>
+<b>int <a name="comm_port_reinsatall">comm_port_reinsatall</a>(comm_port *port);</b><br>
+   If there is a need to reconfigure the port after comm_port_install_port
+   has been called, this can be achieved in two steps. First, reconfigure
+   the comm_port structure either using a file or using the comm_port_set_*
+   functions. Then call this function to ensure that they take effect. This
+   call will wait for any remaining data on the transmit queue to clear
+   before reconfiguring the port.
+<p>
+<b>void <a name="comm_port_uninstall">comm_port_uninstall</a>(comm_port *port);</b><br>
+   Removes the port from the list of functioning ports under dzcomm. Once
+   this function has been called it is no longer to write to or read from
+   the port. Use comm_port_install_handler to get the port running again.
+   This function will wait for any remaining data on the transmit queue to
+   clear before uninstalling the port.
+<p>   
+<b>void <a name="comm_port_flush_output">comm_port_flush_output</a>(comm_port *port);</b><br>
+   Flushes the input buffer.
+<p>
+<b>void <a name="comm_port_flush_input">comm_port_flush_input</a>(comm_port *port);</b><br>
+   Flushes the input buffer.
+<p>
+<b>void <a name="comm_port_delete">comm_port_delete</a>(comm_port *port);</b><br>
+   Having uninstalled your port you may decide that you don't need the
+   configuration data either and can better use the memory elsewhere.
+   Calling this function will free up the memory used to store and run
+   the port. However, please don't try to install the port after you've
+   called comm_port_delete.
+<p>
+<b>int <a name="comm_port_out">comm_port_out</a>(comm_port *port, unsigned char c);</b><br>
+   Puts 'c' on the software output buffer. The UART will then output the
+   contents of this buffer. c must not use more than the number of bits
+   specified configured for data. Returns 1 if the character is successfuly
+   placed on the buffer, 0 otherwise.
+<p>
+<b>int <a name="comm_port_out_empty">comm_port_out_empty</a>(comm_port *port);</b><br>
+   Indicates if there is data waiting to be sent to the UART. Returns 0
+   if there is data waiting to be sent, -1 if the buffer is empty. Also
+   returns 0 on failure.
+<p>
+<b>int <a name="comm_port_out_full">comm_port_out_full</a>(comm_port *port);</b><br>
+   Indicates if the buffer of data waiting to be sent is now full. Returns -1
+   if this is the case and 0 if there is still room for more data on the
+   buffer. Also returns 0 on failure.
+<p>
+<b>int <a name="comm_port_string_send">comm_port_string_send</a>(comm_port *port,char *s);</b><br>
+   The string 's' is sent to the output buffer one character at a time; the
+   UART will transmit this down the serial line. Returns the number of characters
+   successfully placed on the output buffer.
+<p>
+<b>int <a name="comm_port_command_send">comm_port_command_send</a>(comm_port *port,char *s);</b><br>
+   The string 's' is sent to the output buffer one character at a time; the
+   UART will transmit this down the serial line. At the end of the string a
+   '\r' character is sent. Returns the number of characters successfully placed
+   on the output buffer, counting the '\r'. A successfuly send will therefore
+   return the length of the string given to it plus one.
+<p>
+<b>int <a name="comm_port_in_empty">comm_port_in_empty</a>(comm_port *port);</b><br>
+   Indicates if data has come in on the serial line. It returns -1 if there is
+   no data (ie. the buffer is empty), 0 if there is data waiting to be read.
+   Also returns 0 on failure.
+<p>
+<b>int <a name="comm_port_in_full">comm_port_in_full</a>(comm_port *port);</b><br>
+   Indicates if the buffer of data which has come in on the serial line is now
+   full. It retunr -1 if this is the case (ie. the buffer is full) and 0
+   otherwise. Also return 0 on failure.
+<p>
+<b>inline int <a name="comm_port_test">comm_port_test</a>(comm_port *port);</b><br>
+   Checks to see data has come in on the data line. If there is none it returns
+   -1, like comm_port_in_empty. If there is some it returns the next character
+   from the queue of those received from the serial line (and takes it off the
+   queue).
+<p>
+<b>void <a name="comm_port_send_break">comm_port_send_break</a>(comm_port *port, int msec_duration);</b><br>
+   A break signal is issued on the serial line. The break signal will be at
+   least of the duration specified. It may be longer.
+<p>
+<b>int <a name="comm_port_give_line_status">comm_port_give_line_status</a>(comm_port *port, dzcomm_line line);</b><br>
+   Returns the value (1 or 0) of the register requested or -1 on failure. Note
+   that the value returned is the inverse of the physical state of the line
+   connected to the UART because the control lines on a UART are all low
+   when the register is high and vice versa.
+<p>
+   The control line is defined using the following enum:
+<p><pre>
+      typedef enum {DZCOMM_DTR, DZCOMM_RTS, DZCOMM_CTS, DZCOMM_DSR} dzcomm_line;
+<p></pre>
+<br>
+<b>int <a name="comm_port_set_line_status">comm_port_set_line_status</a>(comm_port *port, dzcomm_line line, int value);</b><br>
+   Sets the value of the register requested and return 1 on success or -1 on
+   failure. Note that the physical state of the line connected to the UART
+   will be the inverse of the value set here because the control lines on
+   a UART are all low when the register is high and vice versa.
+<p>
+   The control line is defined using the following enum:
+<p><pre>
+      typedef enum {DZCOMM_DTR, DZCOMM_RTS, DZCOMM_CTS, DZCOMM_DSR} dzcomm_line;
+<p></pre>
+<br>
+   Be careful when using this function - if you are using CTS_RTS flow
+   control or if the UART at the other end is snesitive to it, you may
+   cause confusion ...
+<p>
+<b>int <a name="modem_hangup">modem_hangup</a>(comm_port *port);</b><br>
+   Sends "+++ATH0" to the line which tells it to hang up if it's a modem. Returns
+   one if the entire string (including the concluding '\r') is placed on the output
+   buffer, zero otherwise.
+<p>
+<p><hr><p><a href="dzcomm.html">Back to Contents</a><p>
