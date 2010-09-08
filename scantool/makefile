@@ -10,7 +10,7 @@ ifdef RELEASE
    AL_LIBS = -lalleg
 else
    CFLAGS = -O -Wall -Wformat=0
-   AL_LIBS = -lalleg
+   AL_LIBS = -lalleg -lm -lX11 -lXext -lpthread -lXcursor -lXxf86vm -lXpm
 endif
 endif
 
@@ -40,7 +40,7 @@ ifdef DEFINES
 endif
 
 OBJ += main.o main_menu.o serial.o options.o sensors.o trouble_code_reader.o custom_gui.o error_handlers.o about.o
-BIN = ScanTool.exe
+BIN = scantool
 
 ifdef MINGDIR
 endif
