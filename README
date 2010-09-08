@@ -1,0 +1,11 @@
+It seemed like quite a few things needed patching/converting/fixing to get 
+scantool to compile cleanly on ubuntu so I thought I'd share my copy of
+the source with patched dzcomm library and makefile which enabled me to
+compile on Ubuntu (10.10 - netbook edition).
+
+To compile you'll still need to use apt to retrieve a bunch of dependent
+libraries but you shouldn't have to manually download and compile anything
+other than what is here.
+
+
+
