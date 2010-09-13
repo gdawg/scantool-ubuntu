@@ -446,10 +446,14 @@ int comm_port_install_handler(comm_port *port)
       break;
    }
 
-   /* And call the Machine/OS appropriate installer */
-   if (comm_port_funcs->install_handler) {
-      if (comm_port_funcs->install_handler(port) == 0) return 0;
-   }
+    /* And call the Machine/OS appropriate installer */
+    if (comm_port_funcs->install_handler) {
+      if (comm_port_funcs->install_handler(port) == 0) {
+        dz_make_comm_err("OS handler failed.");
+        return 0;
+       }
+     }
+
 
    switch(port->nData) {
    case BITS_5:
@@ -650,8 +654,8 @@ int comm_port_string_send(comm_port *port, char *s)
        (port->installed == PORT_NOT_INSTALLED) || (comm_port_funcs->out == NULL)) return 0;
 
    /* Make sure it is being sent in a machine/OS correct way */
-   c = comm_port_funcs->out(port, s);
-   for (i=1; ((s[i]!=0) && (c==i)); i++) c += comm_port_funcs->out(port, &s[i]);
+   c = comm_port_funcs->out(port, (unsigned char *)s);
+   for (i=1; ((s[i]!=0) && (c==i)); i++) c += comm_port_funcs->out(port, (unsigned char *)&s[i]);
 
    return c;
 }
@@ -667,10 +671,10 @@ int comm_port_command_send(comm_port *port, char *s)
    if ((s==NULL) || (port == NULL) ||
        (port->installed == PORT_NOT_INSTALLED) || (comm_port_funcs->out == NULL)) return 0;
 
-   /* Make sure it is being sent in a machine/OS correct way */
-   c = comm_port_funcs->out(port, s);
-   for (i=1; ((s[i]!=0) && (c==i)); i++) c += comm_port_funcs->out(port, &s[i]);
-   if (c==i) c += comm_port_funcs->out(port, &r);
+  /* Make sure it is being sent in a machine/OS correct way */
+   c = comm_port_funcs->out(port, (unsigned char *)s);
+   for (i=1; ((s[i]!=0) && (c==i)); i++) c += comm_port_funcs->out(port, (unsigned char *)&s[i]);
+   if (c==i) c += comm_port_funcs->out(port, (unsigned char *)&r);
 
    return c;
 }

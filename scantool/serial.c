@@ -69,10 +69,11 @@ void serial_module_shutdown()
 
 int open_comport()
 {
+   int rc = -1;
+   char temp_str[80];
 #ifdef ALLEGRO_WINDOWS
    DCB dcb;
    COMMTIMEOUTS timeouts;
-   char temp_str[16];
 #endif
 
    if (comport.status == READY)    // if the comport is open,
@@ -117,8 +118,11 @@ int open_comport()
    comm_port_set_data_bits(com_port, BITS_8);
    comm_port_set_stop_bits(com_port, STOP_1);
    comm_port_set_flow_control(com_port, NO_CONTROL);
-   if (comm_port_install_handler(com_port) != 1)
+   rc = comm_port_install_handler(com_port);
+   if (rc != 1)
    {
+      sprintf(temp_str, "\ncom port operation (failed with code:%i)\n", rc);
+      write_log(temp_str);
       comport.status = NOT_OPEN; //port was not open
       return -1; // return error
    }

@@ -190,6 +190,11 @@ int linux_comm_port_install_handler(comm_port *port)
    struct termios       tio;
    speed_t              speed;
 
+   int                  sio_avail = 0;
+
+   /* USB serial ports don't have this information */
+   if (ioctl(port->fd, TIOCGSERIAL, &sio) < 0) sio_avail = 0;
+
    sio.type = (int) PORT_UNKNOWN; /* Want it to work it out */
    sio.flags = ASYNC_CALLOUT_NOHUP | ASYNC_LOW_LATENCY | ASYNC_SKIP_TEST;
    sio.close_delay = 50; /* Hundredths of a sec */
@@ -256,8 +261,11 @@ int linux_comm_port_install_handler(comm_port *port)
    cfsetospeed(&tio, speed);
    cfsetispeed(&tio, speed);
 
-   if (ioctl(port->fd, TIOCSSERIAL, &sio) < 0) return 0;
-   if (ioctl(port->fd, TIOCSERCONFIG) < 0) return 0;
+   if (sio_avail) {
+      if (ioctl(port->fd, TIOCSSERIAL, &sio) < 0) return 0;
+      if (ioctl(port->fd, TIOCSERCONFIG) < 0) return 0;
+   }
+
    tcsetattr(port->fd, TCSANOW, &tio);
 
    return 1;
@@ -312,7 +320,7 @@ int linux_comm_give_line_status(comm_port *port, dzcomm_line line)
 /*-------------- LINUX COMM SET LINE STATUS ------------------------------*/
 int linux_comm_set_line_status(comm_port *port, dzcomm_line line, int value)
 {
-   int flag;
+   int flag=0;
 
    if ((line == DZCOMM_CTS) || (line == DZCOMM_DSR)) return -1;
 
